@@ -1,7 +1,9 @@
 # Historia de un rechazo: ordenación de comunidades plantas de Ocoa, revisitada
 
 *XVIII Jornada de Investigación Científica, UASD*
+
 *12, 13 y 14 de noviembre, 2019*
+
 *Santo Domingo, República Dominicana*
 
 
