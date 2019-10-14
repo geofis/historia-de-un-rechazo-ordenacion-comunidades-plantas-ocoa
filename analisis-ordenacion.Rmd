@@ -1,0 +1,66 @@
+---
+title: "Historia de un rechazo: Ordenación de comunidades plantas de Ocoa, revisitado"
+output: github_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  fig.path = "img/",
+  collapse=TRUE
+)
+```
+
+## Packages
+
+```{r}
+library(tidyverse)
+library(vegan)
+devtools::source_url('https://raw.githubusercontent.com/zdealveindy/anadat-r/master/scripts/NumEcolR2/cleanplot.pca.R')
+```
+
+# Data
+
+```{r}
+cm <- read.csv('data/d.mc.csv', row.names = 1, check.names = F)
+env <- read.csv('data/d.env.csv', row.names = 1, check.names = F)
+```
+
+# Transformación Hellinger
+
+```{r}
+cm_hel <- decostand(cm, "hellinger")
+cm_hel_rda <- rda(cm_hel)
+
+screeplot(
+  cm_hel_rda,
+  bstick = TRUE,
+  npcs = length(cm_hel_rda$CA$eig)
+)
+
+intersect(
+  names(which(colSums(cm>0)>=2)),
+  names(which(colSums(cm)>=10))
+)
+
+cleanplot.pca(cm_hel_rda, scaling = 1)
+cleanplot.pca(cm_hel_rda, scaling = 2)
+
+
+spe.pca.sc1 <- scores(spe.h.pca, display = "species", scaling = 1)
+spe.pca.sc2 <- scores(spe.h.pca, display = "species", scaling = 2)
+par(mfrow = c(1, 2))
+cleanplot.pca(spe.h.pca, scaling
+ = 1, mar.percent = 0.06)
+cleanplot.pca(spe.h.pca, scaling
+ = 2, mar.percent = 0.06)
+
+
+
+cm_hel_rda_env <- envfit(cm_hel_rda ~ ., env %>% select(-Site))
+
+
+```
+
