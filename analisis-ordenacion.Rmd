@@ -52,12 +52,8 @@ cleanplot.pca(cm_hel_rda, scaling = 2)
 spe.pca.sc1 <- scores(spe.h.pca, display = "species", scaling = 1)
 spe.pca.sc2 <- scores(spe.h.pca, display = "species", scaling = 2)
 par(mfrow = c(1, 2))
-cleanplot.pca(spe.h.pca, scaling
- = 1, mar.percent = 0.06)
-cleanplot.pca(spe.h.pca, scaling
- = 2, mar.percent = 0.06)
-
-
+cleanplot.pca(spe.h.pca, scaling = 1, mar.percent = 0.06)
+cleanplot.pca(spe.h.pca, scaling = 2, mar.percent = 0.06)
 
 cm_hel_rda_env <- envfit(cm_hel_rda ~ ., env %>% select(-Site))
 
