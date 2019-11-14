@@ -1,0 +1,212 @@
+---
+title: "Historia de un rechazo: ordenación de comunidades plantas de Ocoa, revisitada"
+author: José Ramón Martínez Batlle
+  #<br> joseramon@geografiafisica.org
+date: XVIII Jornada de Investigación Científica, UASD <br> 12, 13 y 14 de noviembre, 2019 <br> Santo Domingo, República Dominicana <br> https://geofis.github.io/historia-de-un-rechazo-ordenacion-comunidades-plantas-ocoa
+output:
+  revealjs::revealjs_presentation:
+    template: defaultmodificada.html
+    transition: fade
+bibliography: biblio.bib
+csl: apa.csl
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Producción del último año
+<img src="img/durante-el-ultimo-ano.png"  height="100%" width="100%">
+
+|   |   |
+|---|---|
+|<span style="font-size:60%;">[Clusters of high abundance of plants detected from local indicators of spatial association (LISA) in a semi-deciduous tropical forest](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0208780)</span> |<span style="font-size:60%;">[Drainage Rearrangement as a Driver of Geomorphological Evolution During the Upper Pleistocene in a Small Tropical Basin](http://www.ccsenet.org/journal/index.php/jgg/article/view/0/39703)|</span>|
+
+
+# Introducción
+
+##  ¿Por qué es importante hablar sobre rechazo?
+
+* Por la __misma razón por la que es importante reportar resultados negativos__: la ciencia no se basa sólo en las historias de éxito, sino también en las de "fracasos".
+
+* El __sesgo de publicar sólo resultados positivos__ perjudica a las ciencias.
+
+* Nos hemos acostumbrado tanto a celebrar el éxito, que olvidamos que __muchos avances científicos se producen por medio del fracaso__.
+
+* __Preregistered report__
+
+## ![](img/resultados_negativos.png)
+
+
+## ¿En qué consistió este estudio sobre asociación plantas-medio?
+
+* Intentamos responder a la pregunta: ¿Se __asocian__ las comunidades de __plantas con variables ambientales__ como la litología, geomorfología, topografía y la pérdida de bosque?
+
+##
+
+![](img/semideciduousforest.jpg)
+
+## 
+
+* El ecosistema es el identificado como 'bosque semideciduo de *Swietenia-Coccoloba*', según @hager1993vegetacion
+
+* Dos campañas, otoño 2013, verano/otoño 2014.
+
+    * 23 transectos de 50x2 m (2300 m^2^), siguiendo un diseño de muestreo estratificado por litología/relieve, con localización aleatoria de las muestras.
+    
+    * 2158 individuos identificados.
+    
+    * 172 especies de árboles y arbustos, bejucos, palmas y cactáceas +1.5 m.
+
+## 
+
+![](img/samplelocalitiesgeology.png)
+
+##
+
+|||
+:-------------------------:|:-------------------------:
+<img src="img/teambotanist.png" width="350" />|<img src="img/forestslope.png" width="350" />
+Personal en terreno | Muestreo en pendiente
+
+
+## Hallazgos
+
+## ![](img/dendro.png)
+
+##
+
+```{r, eval=T, echo=F, warning=FALSE, message=FALSE, results='asis'}
+library(dplyr)
+library(knitr)
+library(kableExtra)
+danddenv <- 
+  readRDS(
+    'data/danddenv.rds'
+    )
+danddenvp <- danddenv %>%
+  select(especie,fv,eb) %>%
+  distinct() %>%
+  filter(grepl('ateleia|incrass|foetida|caribaeum|rhamn|sulca|frutes|palli', especie, ignore.case=T))
+colnames(danddenvp) <- c('Especie', 'Hábito', 'Distribución')
+kable(danddenvp, format = "markdown")
+```
+
+## {.fullslide}
+<center>
+<img src="img/resultssp1ateleia.png" width="900" />
+</center>
+
+## {.fullslide}
+<center>
+<img src="img/resultssp2coccoloba.png" width="900" />
+</center>
+
+## {.fullslide}
+<center>
+<img src="img/resultssp3eugenia.png" width="900" />
+</center>
+
+## {.fullslide}
+<center>
+<img src="img/resultssp4exostema.png" width="900" />
+</center>
+
+## {.fullslide}
+<center>
+<img src="img/resultssp5phyllostylon.png" width="900" />
+</center>
+
+## {.fullslide}
+<center>
+<img src="img/resultssp6pictetia.png" width="900" />
+</center>
+
+## {.fullslide}
+<center>
+<img src="img/resultssp7schaefferia.png" width="900" />
+</center>
+
+## {.fullslide}
+<center>
+<img src="img/resultssp8trichilia.png" width="900" />
+</center>
+
+## {.fullslide}
+<center>
+<img src="img/resultssp9coccothrinax.png" width="900" />
+</center>
+
+## {.fullslide}
+<center>
+<img src="img/resultssp10leucaena.png" width="900" />
+</center>
+
+
+# Remisión, revisión, rechazo.
+
+## Remisión
+
+## <img src="img/remision_primera_pagina.png" width="75%" />
+
+## ![](img/remision_fecha_envio_num_paginas.png)
+
+## Revisión
+
+## ![](img/revision_01.png)
+
+## ![](img/revision_02.png)
+
+## ![](img/revision_03.png)
+
+## Rechazo
+
+## ![](img/rechazo_01.png)
+
+## ![](img/rechazo_02.png)
+
+## <img src="img/remision_primera_pagina_rechazado_animado.gif" width="75%" />
+
+## Sobre tamaño de la muestra
+
+<img src="img/rendimiento_word_latex_01.png" width="70%" />
+
+## ![](img/rendimiento_word_latex_02.png)
+
+## ![](img/rendimiento_word_latex_03.png)
+
+## Nueva ordenación, reafirma resultados
+
+## ![](img/ordenacion.png)
+
+# Conclusión
+
+## 
+
+* El estudio tiene aportes al conocimiento de las comunidades de plantas de Ocoa, por eso, este año ...
+
+   * ...__*vamo' a da'le al mambo*__.
+   
+   * ...lo enviaremos a una editorial, por supuesto, __no depredadora__ y que preferiblemente cumpla con el __estándar diamante del acceso libre__.
+   
+   * ...sin duda, __hay que hacer mayores esfuerzos de muestreo__, pero que el estudio debe ver la luz.
+
+## Más sobre acceso libre:
+   
+   * [Paywall, the business of scolarship](https://paywallthemovie.com/home)
+   
+   * [Sci-Hub](https://sci-hub.tw/)
+   
+   * [Plan S](https://es.wikipedia.org/wiki/Plan_S)
+   
+   * [The Cost of Knowledge](http://thecostofknowledge.com/)
+   
+   * [Green, gold and diamond? A short primer on open access](https://www.jasonmkelly.com/jason-m-kelly/2013/01/27/green-gold-and-diamond-a-short-primer-on-open-access/)
+
+
+# Referencias
+
+##
+
