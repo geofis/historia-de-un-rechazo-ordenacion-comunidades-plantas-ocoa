@@ -19,44 +19,172 @@ knitr::opts_chunk$set(
 library(tidyverse)
 library(vegan)
 devtools::source_url('https://raw.githubusercontent.com/zdealveindy/anadat-r/master/scripts/NumEcolR2/cleanplot.pca.R')
+devtools::source_url('https://raw.githubusercontent.com/zdealveindy/anadat-r/master/scripts/NumEcolR2/triplot.rda.R')
+```
+
+# Species copied from PDF
+
+```{r}
+#IndVal
+# a <- scan(what = 'character', sep = '\n')
+# a2 <- gsub('[0-9]|\\.|X', '', a)[nchar(gsub('[0-9]|\\.|X', '', a))>0]
+# a2
+# saveRDS(a2, 'a2.RDS')
+a2 <- readRDS('a2.RDS')
+
+#rpb
+# b <- scan(what = 'character', sep = '\n')
+# b2 <- gsub('[0-9]|\\.|X', '', b)[nchar(gsub('[0-9]|\\.|X', '', b))>0]
+# b2
+# saveRDS(b2, 'b2.RDS')
+b2 <- readRDS('b2.RDS')
+
+#a2b2
+a2b2 <- unique(c(a2,b2))
+# saveRDS(a2b2, 'a2b2.RDS')
+
+#Tabla de ambos índices
+c <- scan(what = 'character', sep = '\n')
+c2 <- gsub('Species|X|rpb|IndVal', '', c)[nchar(gsub('Species|X|rpb|IndVal', '', c))>0]
+c2
+saveRDS(c2, 'c2.RDS')
+
+# #Pares. Descartado, los pares no presentan patrón consistente de asociación con hábitats
+# d <- scan(what = 'character', sep = '\n')
+# d2 <- unlist(strsplit(gsub('[0-9]|\\.|Group.*$', '', d)[nchar(gsub('[0-9]|\\.|Group.*$', '', d))>0], split = '+', fixed = T))
+# d2
+# 
+
+#Comparar a2b2 y c2
+identical(sort(a2b2), sort(c2))
+all <- sort(a2b2)
+all
+# saveRDS(all, 'all.RDS')
 ```
 
 # Data
 
 ```{r}
 cm <- read.csv('data/d.mc.csv', row.names = 1, check.names = F)
+colnames(cm) <- word(colnames(cm), 1, 2)
 env <- read.csv('data/d.env.csv', row.names = 1, check.names = F)
 ```
 
-# Transformación Hellinger
+# Transformación Hellinger y ordenación no restringida (PCA)
 
 ```{r}
 cm_hel <- decostand(cm, "hellinger")
+#PCA
 cm_hel_rda <- rda(cm_hel)
+summary(cm_hel_rda)
 
+# dev.new()
 screeplot(
   cm_hel_rda,
   bstick = TRUE,
   npcs = length(cm_hel_rda$CA$eig)
 )
 
-intersect(
-  names(which(colSums(cm>0)>=2)),
-  names(which(colSums(cm)>=10))
-)
-
+# dev.new()
+# par(mfrow=c(1,2))
 cleanplot.pca(cm_hel_rda, scaling = 1)
 cleanplot.pca(cm_hel_rda, scaling = 2)
 
+#spsel: Abundancia e incidencia. Sólo informativo
+dfocab <- data.frame(ocurrence=colSums(cm>0), abundance=colSums(cm)) %>% 
+  rownames_to_column('species') %>%
+  filter(species %in% c2) %>% 
+  arrange(ocurrence, abundance)
+dfocab
+  
+# Selección de especie basado en abundancia e incidencia
+# spsel <- intersect(
+#   names(which(colSums(cm>0)>=2)),
+#   names(which(colSums(cm)>=15))
+# )
 
-spe.pca.sc1 <- scores(spe.h.pca, display = "species", scaling = 1)
-spe.pca.sc2 <- scores(spe.h.pca, display = "species", scaling = 2)
-par(mfrow = c(1, 2))
-cleanplot.pca(spe.h.pca, scaling = 1, mar.percent = 0.06)
-cleanplot.pca(spe.h.pca, scaling = 2, mar.percent = 0.06)
+#spsel: all 16 species associated listed in PDF
+spsel <- all
 
+spe.pca.sc1 <- scores(cm_hel_rda, display = "species", scaling = 1)
+spe.pca.sc2 <- scores(cm_hel_rda, display = "species", scaling = 2)
+
+# dev.new()
+# par(mfrow = c(1, 2))
+cleanplot.pca(cm_hel_rda, scaling = 1, mar.percent = 0.06, select.spe = spsel)
+cleanplot.pca(cm_hel_rda, scaling = 2, mar.percent = 0.06, select.spe = spsel)
 cm_hel_rda_env <- envfit(cm_hel_rda ~ ., env %>% select(-Site))
+cm_hel_rda_env
 
+#SVG
+# svg(
+#   'triplot_rda_unconstrained.svg',
+#   width = 10,
+#   height = 10,
+#   pointsize = 7
+# )
+# cleanplot.pca(cm_hel_rda, scaling = 2, mar.percent = 0.06, select.spe = spsel)
+# dev.off()
 
+#Especies asociadas (16): matriz de comunidad, transformación, PCA y envfit
+cmsel <- cm[, colnames(cm) %in% a2b2]
+cmsel_hel <- decostand(cmsel, "hellinger")
+cmsel_hel_rda <- rda(cmsel_hel)
+cmsel_hel_rda_env <- envfit(cmsel_hel_rda ~ ., env %>% select(-Site))
+cmsel_hel_rda_env
 ```
 
+# Ordenación restringida (análisis de redundancia)
+
+```{r}
+cm_hel_rda_c <- rda(
+  formula = cm_hel ~ .,
+  env %>% select(-Site))
+rdasum <- summary(cm_hel_rda_c)
+rdasum$constr.chi/(rdasum$constr.chi + rdasum$unconst.chi)
+(RsquareAdj(cm_hel_rda_c)$r.squared)
+(RsquareAdj(cm_hel_rda_c)$adj.r.squared)
+# dev.new()
+# par(mfrow=c(1,2))
+triplot.rda(
+  cm_hel_rda_c,
+  site.sc = "lc",
+  scaling = 1,
+  cex.char2 = 0.7,
+  pos.env = 3,
+  pos.centr = 1,
+  mult.arrow = 1.1,
+  mar.percent = 0.05,
+  select.spe = spsel
+)
+triplot.rda(
+  cm_hel_rda_c,
+  site.sc = "lc",
+  scaling = 2,
+  cex.char2 = 0.7,
+  pos.env = 3,
+  pos.centr = 1,
+  mult.arrow = 1.1,
+  mar.percent = 0.05,
+  select.spe = spsel
+)
+# svg(
+#   'triplot_rda_constrained.svg',
+#   width = 10,
+#   height = 10,
+#   pointsize = 7
+# )
+# triplot.rda(
+#   cm_hel_rda_c,
+#   site.sc = "lc",
+#   scaling = 2,
+#   cex.char1 = 1,
+#   cex.char2 = 0.7,
+#   pos.env = 3,
+#   pos.centr = 1,
+#   mult.arrow = 1.1,
+#   mar.percent = -0.05,
+#   select.spe = spsel
+# )
+# dev.off()
+```
