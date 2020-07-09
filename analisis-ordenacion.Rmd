@@ -188,3 +188,29 @@ triplot.rda(
 # )
 # dev.off()
 ```
+
+
+# Estadísticos básicos de riqueza/abundancia
+
+```{r}
+dfv <- readRDS('data/danddenv.rds')
+dfv %>% group_by(fv) %>% n_distinct()
+dfv %>% select(especie, fv) %>% group_by(fv) %>% n_distinct()
+dfv %>% select(especie, fv) %>% distinct %>% group_by(fv) %>% summarise(length(fv))
+# A tibble: 6 x 2
+# fv                `length(fv)`
+# <fct>                    <int>
+# árbol                       69
+# arbusto                     68
+# estípite                     4
+# liana                       28
+# parásita                     1 (también liana)
+# suculenta arbórea            2
+dfv %>% select(especie, eb) %>% distinct %>% group_by(eb) %>% summarise(length(eb))
+dfv %>% select(especie) %>% group_by(especie) %>% summarise(n=length(especie)) %>% arrange(desc(n)) %>% mutate(tot=sum(n), pct=round(n/tot*100,2), pctcum=cumsum(pct))
+dfv %>% select(sitio) %>% group_by(sitio) %>% summarise(n=length(sitio)) %>% arrange(desc(n)) %>% print(n=Inf)
+dfv %>% select(sitio) %>% group_by(sitio) %>% summarise(n=length(sitio)) %>% summarise(m=mean(n))
+dfv %>% select(sitio, especie) %>% distinct %>% group_by(sitio) %>% summarise(S=length(especie)) %>% summarise(m=mean(S))
+
+```
+
