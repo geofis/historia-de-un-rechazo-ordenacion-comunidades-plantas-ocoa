@@ -1,0 +1,40 @@
+---
+title: "Historia de un rechazo: Ordenación de comunidades plantas de Ocoa, revisitado. Tabla de equivalencias entre códigos alfanuméricos y numéricos"
+output: github_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  fig.path = "img/",
+  collapse=TRUE
+)
+```
+
+# Packages
+
+```{r}
+library(tidyverse)
+```
+
+
+# Data
+
+```{r}
+cm <- read.csv('data/d.mc.csv', row.names = 1, check.names = F)
+colnames(cm) <- word(colnames(cm), 1, 2)
+env <- read.csv('data/d.env.csv', row.names = 1, check.names = F)
+```
+
+# Equivalences
+
+```{r}
+(equivalences_alphanum_num <- cm %>%
+  rownames_to_column('codigo') %>%
+  mutate(codigo_num = as.numeric(factor(codigo))) %>%
+  select(codigo, codigo_num))
+equivalences_alphanum_num %>% write_csv('tabla-de-equivalencias.csv')
+```
+
